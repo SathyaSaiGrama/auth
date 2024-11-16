@@ -3,7 +3,7 @@ import { auth } from '../firebase';
 import { confirmPasswordReset } from 'firebase/auth';
 import { useSearchParams } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import logo from "../images/logo.png"
+import logo from "../images/logo.png";
 import "./ResetPassword.css";
 
 const ResetPassword = () => {
@@ -12,12 +12,12 @@ const ResetPassword = () => {
     const [message, setMessage] = useState('');
     const [searchParams] = useSearchParams();
     const [error, setError] = useState("");
+    const [buttonClicked, setButtonClicked] = useState(false); // State to disable button after one click
     const oobCode = searchParams.get('oobCode');
 
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    // Toggle the password visibility
     const toggleNewPasswordVisibility = () => {
         setShowNewPassword(!showNewPassword);
     };
@@ -26,7 +26,6 @@ const ResetPassword = () => {
         setShowConfirmPassword(!showConfirmPassword);
     };
 
-    // Custom validation function
     const validatePassword = (password) => {
         if (password.length < 8 || password.length > 20) {
             return "Password must be between 8 and 20 characters long.";
@@ -49,20 +48,19 @@ const ResetPassword = () => {
     const handlePasswordReset = async (e) => {
         e.preventDefault();
 
-        // Validate passwords match
         if (newPassword !== confirmPassword) {
             setError("Passwords do not match.");
             return;
         }
 
-        // Validate password strength
         const validationError = validatePassword(confirmPassword);
         if (validationError) {
             setError(validationError);
             return;
         }
 
-        setError(""); // Clear error if validation passes
+        setError(""); 
+        setButtonClicked(true); // Disable button after one click
 
         try {
             await confirmPasswordReset(auth, oobCode, newPassword);
@@ -113,7 +111,12 @@ const ResetPassword = () => {
                         </div>
                         {error && <p className="text-danger text-center">{error}</p>}
                         <div className="form-group mb-3 text-center">
-                            <button type="submit" className="btn w-100" style={{backgroundColor: "#B21E2B", color: "white", height: "40px"}}>
+                            <button 
+                                type="submit" 
+                                className="btn w-100" 
+                                style={{backgroundColor: "#B21E2B", color: "white", height: "40px"}}
+                                disabled={buttonClicked} // Disable button after one click
+                            >
                                 Reset Password
                             </button>
                         </div>
