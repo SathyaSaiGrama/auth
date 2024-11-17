@@ -12,7 +12,7 @@ const ResetPassword = () => {
     const [message, setMessage] = useState('');
     const [searchParams] = useSearchParams();
     const [error, setError] = useState("");
-    const [buttonClicked, setButtonClicked] = useState(false); // State to disable button after one click
+    const [buttonClicked, setButtonClicked] = useState(true); // State to disable button after one click
     const oobCode = searchParams.get('oobCode');
 
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -59,8 +59,8 @@ const ResetPassword = () => {
             return;
         }
 
-        setError(""); 
-        setButtonClicked(true); // Disable button after one click
+        setError("");
+        setButtonClicked(false); // Disable button after one click
 
         try {
             await confirmPasswordReset(auth, oobCode, newPassword);
@@ -71,57 +71,67 @@ const ResetPassword = () => {
     };
 
     return (
-        <div className="container d-flex justify-content-center align-items-center" style={{height: "80vh"}}>
+        <div className="container d-flex justify-content-center align-items-center" style={{ height: "80vh" }}>
             <div className="card p-4 shadow-sm" style={{ width: '400px' }}>
                 <div className="card-body">
                     <div className='logo-container'>
-                        <img src={logo} alt="logo" className='logo-img'/>
+                        <img src={logo} alt="logo" className='logo-img' />
                         <h3 className='logo-txt'>Sathya Sai Grama</h3>
                     </div>
                     <h5 className="card-title text-center mb-4 mt-4">Reset Password</h5>
-                    <p className="text-center text-muted">
-                        <p style={{ fontSize: "12px" }}>Password must be at least 8 characters long, contains both upper and lower case letters, includes at least one number, and has at least one special character <span style={{ color: "red" }}>(e.g., !@#$%^&*)</span>.</p>
-                    </p>
-                    <form onSubmit={handlePasswordReset}>
-                        <div className="form-group mb-3" style={styles.passwordContainer}>
-                            <label htmlFor="new password">New Password</label>
-                            <input
-                                type={showNewPassword ? "text" : "password"}
-                                className="form-control"
-                                id="new password"
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                required
-                            />
-                            <span onClick={toggleNewPasswordVisibility} style={styles.eyeIcon}>
-                                {showNewPassword ? <FaEyeSlash /> : <FaEye />}
-                            </span>
-                        </div>
-                        <div className="form-group mb-3" style={styles.passwordContainer}>
-                            <label htmlFor="confirm password">Confirm Password</label>
-                            <input
-                                type={showConfirmPassword ? "text" : "password"}
-                                className="form-control"
-                                id="confirm password"
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                            />
-                            <span onClick={toggleConfirmPasswordVisibility} style={styles.eyeIcon}>
-                                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                            </span>
-                        </div>
-                        {error && <p className="text-danger text-center">{error}</p>}
-                        <div className="form-group mb-3 text-center">
-                            <button 
-                                type="submit" 
-                                className="btn w-100" 
-                                style={{backgroundColor: "#B21E2B", color: "white", height: "40px"}}
-                                disabled={buttonClicked} // Disable button after one click
-                            >
-                                Reset Password
-                            </button>
-                        </div>
-                    </form>
-                    {message && <p className="text-success text-center">{message}</p>}
+                    {
+                        buttonClicked && (
+                            <>
+                                <p className="text-center text-muted">
+                                    <p style={{ fontSize: "12px" }}>Password must be at least 8 characters long, contains both upper and lower case letters, includes at least one number, and has at least one special character <span style={{ color: "red" }}>(e.g., !@#$%^&*)</span>.</p>
+                                </p>
+                                <form onSubmit={handlePasswordReset}>
+                                    <div className="form-group mb-3" style={styles.passwordContainer}>
+                                        <label htmlFor="new password">New Password</label>
+                                        <input
+                                            type={showNewPassword ? "text" : "password"}
+                                            className="form-control"
+                                            id="new password"
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            required
+                                        />
+                                        <span onClick={toggleNewPasswordVisibility} style={styles.eyeIcon}>
+                                            {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </span>
+                                    </div>
+                                    <div className="form-group mb-3" style={styles.passwordContainer}>
+                                        <label htmlFor="confirm password">Confirm Password</label>
+                                        <input
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            className="form-control"
+                                            id="confirm password"
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            required
+                                        />
+                                        <span onClick={toggleConfirmPasswordVisibility} style={styles.eyeIcon}>
+                                            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </span>
+                                    </div>
+                                    {error && <p className="text-danger text-center">{error}</p>}
+                                    <div className="form-group mb-3 text-center">
+                                        <button
+                                            type="submit"
+                                            className="btn w-100"
+                                            style={{ backgroundColor: "#B21E2B", color: "white", height: "40px" }}
+                                            disabled={buttonClicked} // Disable button after one click
+                                        >
+                                            Reset Password
+                                        </button>
+                                    </div>
+                                </form>
+                            </>
+                        )
+                    }
+                    {message && <>
+                        <p className="text-success text-center">{message}</p>
+                        <p className="text-center mt-3" style={{color: "#B21E2B"}}>Thank You</p>
+                    </>
+                    }
                 </div>
             </div>
         </div>
