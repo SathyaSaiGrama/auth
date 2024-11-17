@@ -118,7 +118,6 @@ const ResetPassword = () => {
                                             type="submit"
                                             className="btn w-100"
                                             style={{ backgroundColor: "#B21E2B", color: "white", height: "40px" }}
-                                            disabled={buttonClicked} // Disable button after one click
                                         >
                                             Reset Password
                                         </button>
